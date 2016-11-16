@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-<<<<<<< HEAD
     <wb-module deploy-name="WhatAreYourThoughtsAppServer">
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/appserver"/>
@@ -7,13 +6,5 @@
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
         <property name="context-root" value="WhatAreYourThoughtsAppServer"/>
         <property name="java-output-path" value="/WhatAreYourThoughtsAppServer/target/classes"/>
-=======
-    <wb-module deploy-name="WhatAreYourThoughtsApplicationServer">
-        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
-        <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
-        <property name="context-root" value="WhatAreYourThoughtsApplicationServer"/>
-        <property name="java-output-path" value="/WhatAreYourThoughtsApplicationServer/build/classes"/>
->>>>>>> db43a3c8c8c9b478a23290264d0c73d9956d782a
     </wb-module>
 </project-modules>
