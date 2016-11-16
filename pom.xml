@@ -184,6 +184,12 @@
 			<version>1.0</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-runner</artifactId>
+			<version>9.4.0.RC1</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -205,7 +211,7 @@
 								<artifactItem>
 									<groupId>org.eclipse.jetty</groupId>
 									<artifactId>jetty-runner</artifactId>
-									<version>9.3.3.v20150827</version>
+									<version>9.4.0.RC1</version>
 									<destFileName>jetty-runner.jar</destFileName>
 								</artifactItem>
 							</artifactItems>
