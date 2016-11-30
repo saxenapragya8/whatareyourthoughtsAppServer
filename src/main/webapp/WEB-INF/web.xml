@@ -6,9 +6,9 @@
   <display-name>Servlet 3.0 Web Application</display-name>
   <servlet>
       <servlet-name>Jersey Rest Service</servlet-name>
-      <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+      <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
       <init-param>
-          <param-name>com.sun.jersey.config.property.packages</param-name>
+          <param-name>jersey.config.server.provider.packages</param-name>
           <param-value>com.wayt.services;org.codehaus.jackson.jaxrs</param-value>
       </init-param>
       <init-param>
