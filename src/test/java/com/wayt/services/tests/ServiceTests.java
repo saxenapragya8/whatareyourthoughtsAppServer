@@ -21,7 +21,7 @@ import com.wayt.responses.UserAuthResponse;
 
 public class ServiceTests {
 
-	private final static String WAYT_SERVER = "https://evil-pumpkin-78760.herokuapp.com/";
+	private final static String WAYT_SERVER = "https://evil-pumpkin-78760.herokuapp.com/rest/";
 	private final static String WAYT_LOCAL = "http://localhost:8089/WhatAreYourThoughtsAppServer/rest/";
 	
 	public static void main(String args[]){
@@ -39,7 +39,7 @@ public class ServiceTests {
 	}
 	
 	private static void getRegId(RestTemplate template) {
-		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(WAYT_LOCAL + "regid/getregid")
+		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(WAYT_SERVER + "regid/getregid")
 		        // Add query parameter
 		        .queryParam("userId", "3");
 		System.out.println(builder.toUriString());
