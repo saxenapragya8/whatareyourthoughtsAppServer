@@ -20,4 +20,11 @@ public class UserAuthService {
 	  public UserAuthResponse isValidUser(@QueryParam("username") String username, @QueryParam("passwd") String passwd) throws SQLException, ClassNotFoundException {
 		return UserDao.getInstance().isUser(username, passwd);
 	  }
+	  
+	  @GET
+	  @Path("/get")
+	  @Produces(MediaType.TEXT_PLAIN)
+	  public String sayPlainTextHello() {
+	    return "Hello Jersey";
+	  }
 }
