@@ -35,7 +35,8 @@ public class ServiceTests {
 	    
 //	   isUser(template);
 //	   addRegId(template);
-	   getRegId(template);
+//	    addFriends(template);
+	    getAllConvs(template);
 	}
 	
 	private static void getRegId(RestTemplate template) {
@@ -76,7 +77,7 @@ public class ServiceTests {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(WAYT_LOCAL + "user/isuser")
 		        // Add query parameter
 		        .queryParam("username", "saxena.pragya8@gmail.com")
-		        .queryParam("passwd", "pra20nav");
+		        .queryParam("passwd", "");
 		System.out.println(builder.toUriString());
 		
 		MultiValueMap<String, String> mvm = new LinkedMultiValueMap<String, String>();
@@ -86,5 +87,57 @@ public class ServiceTests {
 		HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<MultiValueMap<String, String>>(mvm, requestHeaders);
 		ResponseEntity<UserAuthResponse> response = template.exchange(builder.build().toUriString(), HttpMethod.GET, requestEntity, UserAuthResponse.class);
 		UserAuthResponse result = response.getBody();
+	}
+	
+	public static void getAllFriends(RestTemplate template){
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(WAYT_LOCAL + "friendship/getfriends")
+		        // Add query parameter
+		        .queryParam("userId", 1);
+		System.out.println(builder.toUriString());
+		
+		MultiValueMap<String, String> mvm = new LinkedMultiValueMap<String, String>();
+		
+		HttpHeaders requestHeaders = new HttpHeaders();
+		requestHeaders.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<MultiValueMap<String, String>>(mvm, requestHeaders);
+		ResponseEntity<List> response = template.exchange(builder.build().toUriString(), HttpMethod.POST, requestEntity, List.class);
+		List result = response.getBody();
+		System.out.println(result);
+	}
+	
+	public static void addFriends(RestTemplate template){
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(WAYT_LOCAL + "friendship/addfriend")
+		        // Add query parameter
+		        .queryParam("userId", 3)
+		        .queryParam("email", "test@test.com");
+		System.out.println(builder.toUriString());
+		
+		MultiValueMap<String, String> mvm = new LinkedMultiValueMap<String, String>();
+		
+		HttpHeaders requestHeaders = new HttpHeaders();
+		requestHeaders.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<MultiValueMap<String, String>>(mvm, requestHeaders);
+		template.exchange(builder.build().toUriString(), HttpMethod.POST, requestEntity, Boolean.class);
+//		List result = response.getBody();
+//		System.out.println(result);
+	}
+	
+	public static void getAllConvs(RestTemplate template){
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(WAYT_LOCAL + "conversations/getalluserconversations")
+		        // Add query parameter
+		        .queryParam("userId", 6);
+		System.out.println(builder.toUriString());
+		
+		MultiValueMap<String, String> mvm = new LinkedMultiValueMap<String, String>();
+		
+		HttpHeaders requestHeaders = new HttpHeaders();
+		requestHeaders.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<MultiValueMap<String, String>>(mvm, requestHeaders);
+		ResponseEntity<List> response = template.exchange(builder.build().toUriString(), HttpMethod.POST, requestEntity, List.class);
+		List result = response.getBody();
+		System.out.println(result);
 	}
 }
