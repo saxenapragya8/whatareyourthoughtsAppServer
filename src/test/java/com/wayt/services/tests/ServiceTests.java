@@ -17,6 +17,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.wayt.responses.AllDisplayDataResponse;
 import com.wayt.responses.UserAuthResponse;
 
 public class ServiceTests {
@@ -36,7 +37,7 @@ public class ServiceTests {
 //	   isUser(template);
 //	   addRegId(template);
 //	    addFriends(template);
-	    getAllConvs(template);
+	    getAllDisplayData(template);
 	}
 	
 	private static void getRegId(RestTemplate template) {
@@ -139,5 +140,24 @@ public class ServiceTests {
 		ResponseEntity<List> response = template.exchange(builder.build().toUriString(), HttpMethod.POST, requestEntity, List.class);
 		List result = response.getBody();
 		System.out.println(result);
+	}
+	
+	public static void getAllDisplayData(RestTemplate template){
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(WAYT_LOCAL + "displaydata/getdata")
+		        // Add query parameter
+		        .queryParam("usrId", 6);
+		System.out.println(builder.toUriString());
+		
+		MultiValueMap<String, String> mvm = new LinkedMultiValueMap<String, String>();
+		
+		HttpHeaders requestHeaders = new HttpHeaders();
+		requestHeaders.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<MultiValueMap<String, String>>(mvm, requestHeaders);
+		ResponseEntity<AllDisplayDataResponse> response = template.exchange(builder.build().toUriString(), HttpMethod.POST, requestEntity, AllDisplayDataResponse.class);
+		AllDisplayDataResponse result = response.getBody();
+		System.out.println(result.getParticipations());
+		System.out.println(result.getConversations());
+		System.out.println(result.getComments());
 	}
 }

@@ -8,6 +8,7 @@ public class ConversationResponse {
 	private Boolean draft;
 	private String sourceLink;
 	
+	public ConversationResponse(){}
 	public ConversationResponse(Integer id, String subject, String slug, Boolean draft, String sourceLink){
 		this.id = id;
 		this.subject = subject;

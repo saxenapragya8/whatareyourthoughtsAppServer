@@ -17,7 +17,7 @@ public class ConversationsDao {
 	private static ConversationsDao instance;
 	
 	String ADD_CONVERATION_QUERY = "{call add_new_conversation(?,?,?,?, ?, ?)}";
-	String ALL_USER_CONVERATIONS_QUERY = "select id, subject, source_link, slug, draft from conversations where user_id=? ";
+	String ALL_USER_CONVERATIONS_QUERY = "select id, subject,user_id, source_link,slug, draft from conversations where id in (SELECT conversation_id FROM participations WHERE user_id=?)";
 	
 	private ConversationsDao() throws ClassNotFoundException, SQLException{
 		DbConnection dbCon = DbConnection.getInstance();
