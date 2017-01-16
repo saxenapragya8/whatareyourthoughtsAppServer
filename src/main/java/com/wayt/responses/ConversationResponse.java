@@ -36,4 +36,11 @@ public class ConversationResponse {
 	public String getSourceLink() {
 		return sourceLink;
 	}
+	@Override
+	public String toString() {
+		return "ConversationResponse [id=" + id + ", subject=" + subject + ", slug=" + slug + ", draft=" + draft
+				+ ", sourceLink=" + sourceLink + "]";
+	}
+	
+	
 }

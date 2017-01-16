@@ -30,4 +30,11 @@ public class CommentResponse {
 	public String getContent() {
 		return content;
 	}
+	@Override
+	public String toString() {
+		return "CommentResponse [id=" + id + ", participationId=" + participationId + ", convId=" + convId
+				+ ", content=" + content + "]";
+	}
+	
+	
 }

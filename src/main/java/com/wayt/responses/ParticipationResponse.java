@@ -42,4 +42,11 @@ public class ParticipationResponse {
 	public boolean isMute() {
 		return mute;
 	}
+	@Override
+	public String toString() {
+		return "ParticipationResponse [id=" + id + ", conversationId=" + conversationId + ", read=" + read
+				+ ", important=" + important + ", othersCount=" + othersCount + ", mute=" + mute + "]";
+	}
+	
+	
 }

@@ -36,9 +36,9 @@ public class ServiceTests {
 	    template.setMessageConverters(converters);
 	    
 //	   isUser(template);
-	   addRegId(template);
+//	   addRegId(template);
 //	    addFriends(template);
-//	    getAllDisplayData(template);
+	    getAllDisplayData(template);
 	}
 	
 	private static void getRegId(RestTemplate template) {
@@ -148,7 +148,7 @@ public class ServiceTests {
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(WAYT_LOCAL + "displaydata/getdata")
 		        // Add query parameter
-		        .queryParam("usrId", 6);
+		        .queryParam("usrId", 3);
 		System.out.println(builder.toUriString());
 		
 		MultiValueMap<String, String> mvm = new LinkedMultiValueMap<String, String>();
