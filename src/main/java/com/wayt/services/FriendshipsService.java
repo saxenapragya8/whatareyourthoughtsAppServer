@@ -6,6 +6,7 @@ import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
@@ -18,6 +19,7 @@ public class FriendshipsService {
 	@POST
 	@Path("/addfriend")
 	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
 	public void addFriend(@QueryParam(value = "userId")int usrId, @QueryParam(value = "email") String emailId) throws SQLException, ClassNotFoundException {
 		Boolean needsEmailNotify = FriendshipDao.getInstance().addFriendship(usrId, emailId);
 		if(needsEmailNotify != null && needsEmailNotify){
@@ -28,6 +30,7 @@ public class FriendshipsService {
 	@POST
 	@Path("/getfriends")
 	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
 	public List<FriendIdEmailNameResponse> getAllFriends(@QueryParam(value = "userId")int usrId) throws SQLException, ClassNotFoundException {
 		return FriendshipDao.getInstance().getAllFriendsWithEmail(usrId);
 	 }

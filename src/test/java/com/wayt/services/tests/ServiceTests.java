@@ -35,9 +35,9 @@ public class ServiceTests {
 	    template.setMessageConverters(converters);
 	    
 //	   isUser(template);
-//	   addRegId(template);
+	   addRegId(template);
 //	    addFriends(template);
-	    getAllDisplayData(template);
+//	    getAllDisplayData(template);
 	}
 	
 	private static void getRegId(RestTemplate template) {
@@ -75,10 +75,10 @@ public class ServiceTests {
 
 	public static void isUser(RestTemplate template){
 		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(WAYT_LOCAL + "user/isuser")
+		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(WAYT_SERVER + "user/isuser")
 		        // Add query parameter
 		        .queryParam("username", "saxena.pragya8@gmail.com")
-		        .queryParam("passwd", "");
+		        .queryParam("passwd", "pra20nav");
 		System.out.println(builder.toUriString());
 		
 		MultiValueMap<String, String> mvm = new LinkedMultiValueMap<String, String>();
@@ -88,6 +88,7 @@ public class ServiceTests {
 		HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<MultiValueMap<String, String>>(mvm, requestHeaders);
 		ResponseEntity<UserAuthResponse> response = template.exchange(builder.build().toUriString(), HttpMethod.GET, requestEntity, UserAuthResponse.class);
 		UserAuthResponse result = response.getBody();
+		System.out.println(result);
 	}
 	
 	public static void getAllFriends(RestTemplate template){
