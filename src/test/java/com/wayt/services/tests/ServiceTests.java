@@ -18,6 +18,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.wayt.responses.AllDisplayDataResponse;
+import com.wayt.responses.RegIdUpdateResponse;
 import com.wayt.responses.UserAuthResponse;
 
 public class ServiceTests {
@@ -68,8 +69,8 @@ public class ServiceTests {
 		HttpHeaders requestHeaders = new HttpHeaders();
 		requestHeaders.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<MultiValueMap<String, String>>(mvm, requestHeaders);
-		ResponseEntity<Boolean> response = template.exchange(builder.build().toUriString(), HttpMethod.POST, requestEntity, Boolean.class);
-		Boolean result = response.getBody();
+		ResponseEntity<RegIdUpdateResponse> response = template.exchange(builder.build().toUriString(), HttpMethod.POST, requestEntity, RegIdUpdateResponse.class);
+		RegIdUpdateResponse result = response.getBody();
 		System.out.println(result);
 	}
 
