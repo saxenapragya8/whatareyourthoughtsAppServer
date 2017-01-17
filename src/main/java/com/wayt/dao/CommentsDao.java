@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.wayt.responses.CommentResponse;
@@ -16,7 +17,7 @@ public class CommentsDao {
 	private Connection conn;
 	private static CommentsDao instance;
 	
-	String GET_ALL_COMMENTS_BY_CONVERSATION_ID = "select id, participation_id, conversation_id, content from comments where participation_id in (SELECT id FROM participations WHERE user_id=?)";
+	String GET_ALL_COMMENTS_BY_CONVERSATION_ID = "select id, participation_id, conversation_id, content, updated_at from comments where conversation_id in (SELECT conversation_id FROM participations WHERE user_id=?)";
 	String ADD_NEW_COMMENT_QUERY = "insert into comments(participation_id, conversation_id, content, created_at, updated_at) values(?, ?, ?, now()::date, now()::date)";
 	
 	private CommentsDao() throws ClassNotFoundException, SQLException{
@@ -43,7 +44,8 @@ public class CommentsDao {
 				Integer participationId = rs.getInt("participation_id");
 				Integer convId = rs.getInt("conversation_id");
 				String content = rs.getString("content");
-				comments.add(new CommentResponse(id, participationId, convId, content));
+				Date updatedAtDate = rs.getDate("updated_at");
+				comments.add(new CommentResponse(updatedAtDate, id, participationId, convId, content));
 			}
 			return comments;
 

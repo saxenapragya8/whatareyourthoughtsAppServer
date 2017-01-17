@@ -2,6 +2,7 @@ package com.wayt.services;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -29,7 +30,8 @@ public class AllDisplayDataService {
 		List<ParticipationResponse> participations = ParticipationsDao.getInstance().getUserParticipations(usrId);
 		List<ConversationResponse> conversations = ConversationsDao.getInstance().getUserConversations(usrId);
 		List<CommentResponse> comments = CommentsDao.getInstance().getUserComments(usrId);
-		AllDisplayDataResponse allDisplayData = new AllDisplayDataResponse(participations, conversations, comments);
+		Map<Integer, List<String>> convIdUsersMap = ConversationsDao.getInstance().getOtherUsersNamesInvolvedInThisUsersConvs(usrId);
+		AllDisplayDataResponse allDisplayData = new AllDisplayDataResponse(convIdUsersMap, participations, conversations, comments);
 		return allDisplayData;
 	}
 }

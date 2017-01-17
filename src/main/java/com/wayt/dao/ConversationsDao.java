@@ -6,7 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.wayt.responses.ConversationResponse;
 import com.wayt.responses.FriendIdEmailNameResponse;
@@ -18,6 +20,7 @@ public class ConversationsDao {
 	
 	String ADD_CONVERATION_QUERY = "{call add_new_conversation(?,?,?,?, ?, ?)}";
 	String ALL_USER_CONVERATIONS_QUERY = "select id, subject,user_id, source_link,slug, draft from conversations where id in (SELECT conversation_id FROM participations WHERE user_id=?)";
+	String OTHER_USERS_IN_CONVERSATION = "select p.conversation_id , u.name from participations p, users u where p.conversation_id in (SELECT conversation_id FROM participations WHERE user_id=?) and p.user_id = u.id";
 	
 	private ConversationsDao() throws ClassNotFoundException, SQLException{
 		DbConnection dbCon = DbConnection.getInstance();
@@ -54,6 +57,35 @@ public class ConversationsDao {
 //		}
 	}
 
+	public Map<Integer, List<String>> getOtherUsersNamesInvolvedInThisUsersConvs(int usrId) throws SQLException, ClassNotFoundException {
+		Map<Integer, List<String>> convIdUsers = new HashMap<Integer, List<String>>();
+		CallableStatement stmt = conn.prepareCall(OTHER_USERS_IN_CONVERSATION);
+		try {
+			stmt.setInt(1, usrId);
+			ResultSet rs = stmt.executeQuery();
+			while(rs.next()){
+				Integer id = rs.getInt("conversation_id");
+				String name = rs.getString("name");
+				if(convIdUsers.containsKey(id)){
+					convIdUsers.get(id).add(name);
+				} else {
+					List<String> userNames = new ArrayList<String>();
+					userNames.add(name);
+					convIdUsers.put(id, userNames);
+				}
+			}
+			return convIdUsers;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} 
+//		finally{
+//			stmt.close();
+//			dbCon.closeConnection();
+//		}
+	}
+	
 	public List<ConversationResponse> getUserConversations(int usrId) throws SQLException, ClassNotFoundException {
 		
 		CallableStatement stmt = conn.prepareCall(ALL_USER_CONVERATIONS_QUERY);
