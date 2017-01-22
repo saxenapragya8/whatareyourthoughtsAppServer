@@ -146,7 +146,7 @@ public class ServiceTests {
 	
 	public static void getAllDisplayData(RestTemplate template){
 		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(WAYT_LOCAL + "displaydata/getdata")
+		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(WAYT_SERVER + "displaydata/getdata")
 		        // Add query parameter
 		        .queryParam("usrId", 3);
 		System.out.println(builder.toUriString());
