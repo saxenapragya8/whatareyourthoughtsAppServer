@@ -1,13 +1,13 @@
 package com.wayt.responses;
 
-public class RegIdUpdateResponse {
+public class UpdateStatusResponse {
 
 	private boolean updateStatus = false;
 
-	public RegIdUpdateResponse(boolean status){
+	public UpdateStatusResponse(boolean status){
 		this.updateStatus = status;
 	}
-	public RegIdUpdateResponse(){}
+	public UpdateStatusResponse(){}
 	public boolean isUpdateStatus() {
 		return updateStatus;
 	}

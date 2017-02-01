@@ -12,7 +12,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.wayt.dao.RegIdDao;
-import com.wayt.responses.RegIdUpdateResponse;
+import com.wayt.responses.UpdateStatusResponse;
 
 public class NotificationSender {
 

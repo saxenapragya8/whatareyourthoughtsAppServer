@@ -10,7 +10,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import com.wayt.dao.RegIdDao;
-import com.wayt.responses.RegIdUpdateResponse;
+import com.wayt.responses.UpdateStatusResponse;
 
 @Path("/regid")
 public class RegIdService {
@@ -27,8 +27,8 @@ public class RegIdService {
 	  @Path("/updateregid")
 	  @Consumes(MediaType.APPLICATION_JSON)
 	  @Produces(MediaType.APPLICATION_JSON)
-	  public RegIdUpdateResponse updateRegId(@QueryParam(value = "userId") int usrId, @QueryParam(value = "registrationId") String regId) throws SQLException, ClassNotFoundException {
+	  public UpdateStatusResponse updateRegId(@QueryParam(value = "userId") int usrId, @QueryParam(value = "registrationId") String regId) throws SQLException, ClassNotFoundException {
 		boolean status = RegIdDao.getInstance().updateRegId(usrId, regId);
-		return new RegIdUpdateResponse(status);
+		return new UpdateStatusResponse(status);
 	  }
 }

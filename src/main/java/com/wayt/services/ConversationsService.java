@@ -13,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 import com.wayt.dao.ConversationsDao;
 import com.wayt.dao.UserDao;
 import com.wayt.responses.ConversationResponse;
+import com.wayt.responses.UpdateStatusResponse;
 
 @Path("/conversations")
 public class ConversationsService {
@@ -21,9 +22,10 @@ public class ConversationsService {
 	@Path("/addconversation")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public boolean addConversation(@QueryParam(value = "userId")int usrId, @QueryParam(value = "subject") String sub, @QueryParam(value = "link") String articleLink, @QueryParam(value = "slug") String slug, @QueryParam(value = "recipientIds") List<String> recipients, @QueryParam(value = "content")String content) throws SQLException, ClassNotFoundException {
+	public UpdateStatusResponse addConversation(@QueryParam(value = "userId")int usrId, @QueryParam(value = "subject") String sub, @QueryParam(value = "link") String articleLink, @QueryParam(value = "slug") String slug, @QueryParam(value = "recipientIds") List<String> recipients, @QueryParam(value = "content")String content) throws SQLException, ClassNotFoundException {
 		List<Integer> recipientIds = UserDao.getInstance().getAllUserIdsForEmails(recipients);
-		return ConversationsDao.getInstance().addNewConversation(usrId, sub, articleLink, slug, recipientIds, content);
+		boolean status = ConversationsDao.getInstance().addNewConversation(usrId, sub, articleLink, slug, recipientIds, content);
+		return new UpdateStatusResponse(status);
 	}
 	
 	@POST
