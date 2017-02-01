@@ -18,7 +18,7 @@ public class ConversationsDao {
 	private Connection conn;
 	private static ConversationsDao instance;
 	
-	String ADD_CONVERATION_QUERY = "{call add_new_conversation(?,?,?,?, ?, ?)}";
+	String ADD_CONVERATION_QUERY = "{call add_new_conversation(?,?,?,?, ?, ?, ?)}";
 	String ALL_USER_CONVERATIONS_QUERY = "select id, subject,user_id, source_link,slug, draft from conversations where id in (SELECT conversation_id FROM participations WHERE user_id=?)";
 	String OTHER_USERS_IN_CONVERSATION = "select p.conversation_id , u.name from participations p, users u where p.conversation_id in (SELECT conversation_id FROM participations WHERE user_id=?) and p.user_id = u.id";
 	
@@ -34,7 +34,7 @@ public class ConversationsDao {
 		return instance;
 	}
 
-	public Boolean addNewConversation(int usrId, String subject, String articleLink, String slug, List<Integer> recipients) throws SQLException, ClassNotFoundException {
+	public Boolean addNewConversation(int usrId, String subject, String articleLink, String slug, List<Integer> recipients, String content) throws SQLException, ClassNotFoundException {
 		
 		CallableStatement stmt = conn.prepareCall(ADD_CONVERATION_QUERY);
 		try {
@@ -42,8 +42,9 @@ public class ConversationsDao {
 			stmt.setString(2, subject);
 			stmt.setString(3, articleLink);
 			stmt.setString(4, slug);
-			stmt.setArray(5, conn.createArrayOf("varchar", (String[])recipients.toArray()));
+			stmt.setArray(5, conn.createArrayOf("varchar", recipients.toArray()));
 			stmt.registerOutParameter(6, Types.BOOLEAN);
+			stmt.setString(7, content);
 			stmt.execute();
 			
 			return stmt.getBoolean(6);

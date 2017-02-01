@@ -5,6 +5,10 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
@@ -14,6 +18,7 @@ public class UserDao {
 
 	private static UserDao instance;
 	String IS_USER_QUERY = "select id, encrypted_password from users where email=?";
+	String GET_ALL_RECIPIENT_IDS_QUERY = "select id from users where email = any(?)";
 //	String CREATE_USER_QUERY = "{call create_user(?,?,?,?,?)}";
 //	private String GET_EMAIL_FOR_USER = "select email from users where id=?";
 //	private String SOME_USER_ADD_SPOUSE_PENDING_CHECK_QUERY = "select 1 from bt_couples where spouse_id = ? or user_id = ?";
@@ -56,5 +61,22 @@ public class UserDao {
 //			dbCon.closeConnection();
 //		}
 		return new UserAuthResponse(-1, false); 
+	}
+	
+	public List<Integer> getAllUserIdsForEmails(List<String> emails){
+		Set<Integer> userIds = new HashSet<Integer>();
+		try {
+			CallableStatement stmt = conn.prepareCall(GET_ALL_RECIPIENT_IDS_QUERY);
+			stmt.setArray(1, conn.createArrayOf("varchar", emails.toArray()));
+			ResultSet rs = stmt.executeQuery();
+			while(rs.next()){
+				Integer id = rs.getInt("id");
+				userIds.add(id);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} 
+		return new ArrayList<Integer>(userIds);
 	}
 }

@@ -38,9 +38,31 @@ public class ServiceTests {
 //	   isUser(template);
 //	   addRegId(template);
 //	    addFriends(template);
-	    getAllDisplayData(template);
+//	    getAllDisplayData(template);
+	    addNewConversation(template);
 	}
 	
+	private static void addNewConversation(RestTemplate template) {
+		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(WAYT_LOCAL + "conversations/addconversation")
+		        // Add query parameter
+		        .queryParam("userId", "3")
+		        .queryParam("subject", "random")
+		        .queryParam("link", "")
+		        .queryParam("slug", "")
+		        .queryParam("recipientIds", "random")
+		        .queryParam("content", "<p>pragya</p>");
+		System.out.println(builder.toUriString());
+		
+		MultiValueMap<String, String> mvm = new LinkedMultiValueMap<String, String>();
+		
+		HttpHeaders requestHeaders = new HttpHeaders();
+		requestHeaders.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<MultiValueMap<String, String>>(mvm, requestHeaders);
+		ResponseEntity<Boolean> response = template.exchange(builder.build().toUriString(), HttpMethod.POST, requestEntity, Boolean.class);
+		Boolean result = response.getBody();
+		System.out.println(result);
+	}
+
 	private static void getRegId(RestTemplate template) {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(WAYT_SERVER + "regid/getregid")
 		        // Add query parameter
@@ -58,7 +80,7 @@ public class ServiceTests {
 	}
 
 	private static void addRegId(RestTemplate template) {
-		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(WAYT_LOCAL + "regid/updateregid")
+		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(WAYT_SERVER + "regid/updateregid")
 		        // Add query parameter
 		        .queryParam("userId", "3")
 		        .queryParam("registrationId", "random");
