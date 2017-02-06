@@ -13,11 +13,14 @@ import javax.ws.rs.core.MediaType;
 
 import com.wayt.dao.ConversationsDao;
 import com.wayt.dao.UserDao;
+import com.wayt.notifications.NotificationSender;
 import com.wayt.responses.ConversationResponse;
 import com.wayt.responses.UpdateStatusResponse;
 
 @Path("/conversations")
 public class ConversationsService {
+	
+	NotificationSender sender = new NotificationSender();
 	
 	@POST
 	@Path("/addconversation")
@@ -27,6 +30,9 @@ public class ConversationsService {
 		List<Integer> recipientIds = UserDao.getInstance().getAllUserIdsForEmails(recipients);
 		String slug = sub.replaceAll(" ", "-");
 		boolean status = ConversationsDao.getInstance().addNewConversation(usrId, sub, articleLink, slug, recipientIds, content);
+		for(Integer recipientId: recipientIds){
+			sender.sendNotification(recipientId, sub);
+		}
 		return new UpdateStatusResponse(status);
 	}
 	

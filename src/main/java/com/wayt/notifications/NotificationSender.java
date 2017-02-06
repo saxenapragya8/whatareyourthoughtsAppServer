@@ -1,39 +1,53 @@
 package com.wayt.notifications;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
 
 import com.wayt.dao.RegIdDao;
-import com.wayt.responses.UpdateStatusResponse;
 
 public class NotificationSender {
 
 	private String FIREBASE_URL = "https://fcm.googleapis.com/fcm/send";
+	private RestTemplate template;
 	
-	public void sendNotification(Integer userId) throws ClassNotFoundException, SQLException{
+	public NotificationSender(){
+		template = new RestTemplate();
+		List<HttpMessageConverter<?>> converters = new ArrayList<HttpMessageConverter<?>>();
+	    converters.add(new StringHttpMessageConverter());
+	    converters.add(new Jaxb2RootElementHttpMessageConverter());
+	    converters.add(new MappingJackson2HttpMessageConverter());
+	    template.setMessageConverters(converters);
+	}
+	
+	public void sendNotification(Integer userId, String convAdded) throws ClassNotFoundException, SQLException{
 		String regId = RegIdDao.getInstance().getRegId(userId);
-		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(FIREBASE_URL)
-		        // Add query parameter
-		        .queryParam("userId", "3")
-		        .queryParam("registrationId", "random");
-		System.out.println(builder.toUriString());
-		
-		MultiValueMap<String, String> mvm = new LinkedMultiValueMap<String, String>();
+		NewConvNotificationData notificationData = new NewConvNotificationData("New conversation added", convAdded);
+		Notification notification = new Notification("New conversation added", convAdded);
+		SendData data = new SendData(notificationData, regId, notification);
 		
 		HttpHeaders requestHeaders = new HttpHeaders();
 		requestHeaders.setContentType(MediaType.APPLICATION_JSON);
-		requestHeaders.set("", "");
-		HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<MultiValueMap<String, String>>(mvm, requestHeaders);
-//		ResponseEntity<RegIdUpdateResponse> response = template.exchange(builder.build().toUriString(), HttpMethod.POST, requestEntity, RegIdUpdateResponse.class);
-//		RegIdUpdateResponse result = response.getBody();
-//		System.out.println(result);
+		requestHeaders.set("Authorization","key=" + System.getenv("AUTH_KEY"));
+		HttpEntity<SendData> requestEntity = new HttpEntity<SendData>(data, requestHeaders);
+		try{
+			ResponseEntity<String> response = template.exchange(FIREBASE_URL, HttpMethod.POST, requestEntity, String.class);
+			System.out.println(response);
+//			Boolean result = response.getBody();
+//		template.postForEntity(FIREBASE_URL, requestEntity, String.class);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 }

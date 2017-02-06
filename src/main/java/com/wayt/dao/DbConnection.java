@@ -12,9 +12,6 @@ public final class DbConnection {
 
 	private static BasicDataSource connectionPool = new BasicDataSource();
 	private static final String driverClassName = "org.postgresql.Driver";
-//    private static final String url = "jdbc:postgresql://ec2-107-20-234-127.compute-1.amazonaws.com:5432/deprj3m0b5sovp?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory";
-//	private static final String dbUsername = "jjtlhkinzgzagc";
-//	private static final String dbPassword = "6t2FFiFAicJF2OctagzZYzqIlV";
 	private static DbConnection dbConn;
 	private static final String url = System.getenv("DATABASE_URL");
 	private static final String dbUsername = System.getenv("DATABASE_USERNAME");
