@@ -15,6 +15,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import com.wayt.dao.ConversationsDao;
 import com.wayt.dao.RegIdDao;
 
 public class NotificationSender {
@@ -44,8 +45,24 @@ public class NotificationSender {
 		try{
 			ResponseEntity<String> response = template.exchange(FIREBASE_URL, HttpMethod.POST, requestEntity, String.class);
 			System.out.println(response);
-//			Boolean result = response.getBody();
-//		template.postForEntity(FIREBASE_URL, requestEntity, String.class);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	public void sendNewCommentNotification(Integer userId, Integer convId, String regId) throws ClassNotFoundException, SQLException{
+		String convTitle = ConversationsDao.getInstance().getConvTitle(convId);
+		NewConvNotificationData notificationData = new NewConvNotificationData("New comment added", convTitle);
+		Notification notification = new Notification("New comment added", convTitle);
+		SendData data = new SendData(notificationData, regId, notification);
+		
+		HttpHeaders requestHeaders = new HttpHeaders();
+		requestHeaders.setContentType(MediaType.APPLICATION_JSON);
+		requestHeaders.set("Authorization","key=" + System.getenv("AUTH_KEY"));
+		HttpEntity<SendData> requestEntity = new HttpEntity<SendData>(data, requestHeaders);
+		try{
+			ResponseEntity<String> response = template.exchange(FIREBASE_URL, HttpMethod.POST, requestEntity, String.class);
+			System.out.println(response);
 		}catch(Exception e){
 			e.printStackTrace();
 		}

@@ -12,18 +12,29 @@ import javax.ws.rs.core.MediaType;
 
 import com.wayt.dao.CommentsDao;
 import com.wayt.dao.ConversationsDao;
+import com.wayt.dao.RegIdDao;
+import com.wayt.notifications.NotificationSender;
 import com.wayt.responses.CommentResponse;
 import com.wayt.responses.ConversationResponse;
+import com.wayt.responses.UpdateStatusResponse;
 
 @Path("/comments")
 public class CommentsService {
 
+	NotificationSender sender = new NotificationSender();
+	
 	@POST
 	@Path("/addcomment")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public boolean addConversation(@QueryParam(value = "convId")int conversationId, @QueryParam(value = "participationId") int participationId, @QueryParam(value = "content") String content) throws SQLException, ClassNotFoundException {
-		return CommentsDao.getInstance().addNewComment(conversationId, participationId, content);
+	public UpdateStatusResponse addConversation(@QueryParam(value = "convId")int conversationId, @QueryParam(value = "userId") int userId, @QueryParam(value = "content") String content) throws SQLException, ClassNotFoundException {
+		boolean addedStatus = CommentsDao.getInstance().addNewComment(conversationId, userId, content);
+		List<String> regIds = RegIdDao.getInstance().getAllParticipantRegIds(conversationId, userId);
+		for(String regId: regIds){
+			if(!regId.isEmpty())
+				sender.sendNewCommentNotification(userId, conversationId, regId);
+		}
+		return new UpdateStatusResponse(addedStatus);
 	}
 	
 	@POST

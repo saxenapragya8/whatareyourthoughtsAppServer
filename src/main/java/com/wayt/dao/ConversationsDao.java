@@ -21,6 +21,7 @@ public class ConversationsDao {
 	String ADD_CONVERATION_QUERY = "{call add_new_conversation(?,?,?,?, ?, ?, ?)}";
 	String ALL_USER_CONVERATIONS_QUERY = "select id, subject,user_id, source_link,slug, draft from conversations where id in (SELECT conversation_id FROM participations WHERE user_id=?)";
 	String OTHER_USERS_IN_CONVERSATION = "select p.conversation_id , u.name from participations p, users u where p.conversation_id in (SELECT conversation_id FROM participations WHERE user_id=?) and p.user_id = u.id";
+	String GET_CONV_TITLE = "select subject from conversations where id = ?";
 	
 	private ConversationsDao() throws ClassNotFoundException, SQLException{
 		DbConnection dbCon = DbConnection.getInstance();
@@ -112,5 +113,21 @@ public class ConversationsDao {
 //			stmt.close();
 //			dbCon.closeConnection();
 //		}
+	}
+	
+	public String getConvTitle(Integer convId) throws SQLException, ClassNotFoundException {
+		
+		CallableStatement stmt = conn.prepareCall(GET_CONV_TITLE);
+		try {
+			stmt.setInt(1, convId);
+			ResultSet rs = stmt.executeQuery();
+			rs.next();
+			String subject = rs.getString("subject");
+			return subject;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

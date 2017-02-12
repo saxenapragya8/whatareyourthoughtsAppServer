@@ -16,6 +16,7 @@ public class RegIdDao {
 
 	String UPDATE_REQ_ID_QUERY = "update users set reg_id=?, updated_at=now()::timestamp where id=?";
 	String SELECT_REQ_ID_QUERY = "select reg_id from users where id=?";
+	String SELECT_ALL_REG_IDS_FOR_CONV_QUERY = "select reg_id from users where id in (select user_id from participations where conversation_id=? and conversation_id != ?)";
 	
 	private RegIdDao() throws ClassNotFoundException, SQLException{
 		DbConnection dbCon = DbConnection.getInstance();
@@ -59,5 +60,24 @@ public class RegIdDao {
 //		finally{
 //			dbCon.closeConnection();
 //		}
+	}
+	
+	public List<String> getAllParticipantRegIds(Integer conversationId, Integer userId){
+		List<String> regIds = new ArrayList<String>();
+		try {
+			PreparedStatement stmt = conn.prepareStatement(SELECT_ALL_REG_IDS_FOR_CONV_QUERY);
+			stmt.setInt(1, conversationId);
+			stmt.setInt(2, userId);
+			ResultSet rs = stmt.executeQuery();
+			
+			while(rs.next()){
+				String regId = rs.getString("reg_id");
+				regIds.add(regId);
+			}
+			return regIds;
+		}catch(Exception e){
+			e.printStackTrace();
+			return regIds;
+		}
 	}
 }

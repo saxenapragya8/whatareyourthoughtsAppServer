@@ -18,7 +18,7 @@ public class CommentsDao {
 	private static CommentsDao instance;
 	
 	String GET_ALL_COMMENTS_BY_CONVERSATION_ID = "select id, participation_id, conversation_id, content, updated_at from comments where conversation_id in (SELECT conversation_id FROM participations WHERE user_id=?)";
-	String ADD_NEW_COMMENT_QUERY = "insert into comments(participation_id, conversation_id, content, created_at, updated_at) values(?, ?, ?, now()::date, now()::date)";
+	String ADD_NEW_COMMENT_QUERY = "{call add_comment(?,?,?,?)}";
 	
 	private CommentsDao() throws ClassNotFoundException, SQLException{
 		DbConnection dbCon = DbConnection.getInstance();
@@ -55,15 +55,16 @@ public class CommentsDao {
 		}
 	}
 	
-	public Boolean addNewComment(Integer conversationId, Integer participationId, String content) throws SQLException{
+	public Boolean addNewComment(Integer conversationId, Integer userId, String content) throws SQLException{
 		CallableStatement stmt = conn.prepareCall(ADD_NEW_COMMENT_QUERY);
 		try {
-			stmt.setInt(1, participationId);
-			stmt.setInt(2, conversationId);
+			stmt.setInt(1, conversationId);
+			stmt.setInt(2, userId);
 			stmt.setString(3, content);
+			stmt.registerOutParameter(4, Types.BOOLEAN);
 			stmt.execute();
 			
-			return true;
+			return stmt.getBoolean(4);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
