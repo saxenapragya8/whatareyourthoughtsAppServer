@@ -27,4 +27,13 @@ public class UserAuthService {
 	  public String sayPlainTextHello() {
 	    return "Hello Jersey";
 	  }
+	  
+	  
+	  //Checks if the user is already present. If not adds the new user
+	  @GET
+	  @Path("/addNewUser")
+	  @Produces(MediaType.APPLICATION_JSON)
+	  public UserAuthResponse addUser(@QueryParam("username") String username, @QueryParam("email") String email, @QueryParam("userId") String userId) throws SQLException, ClassNotFoundException {
+		return UserDao.getInstance().addUserIfNotPresent(username, email, userId);
+	  }
 }

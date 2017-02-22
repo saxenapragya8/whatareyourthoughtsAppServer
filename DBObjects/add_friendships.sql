@@ -4,7 +4,7 @@ BEGIN
   select id into friend_id from users where trim(email)=trim($2);
   select count(*) into is_already_friend from friendships where user_id = $1 and friend_id = friend_id;
   if friend_id > 0 and is_already_friend > 0 then
-  	insert into friendships(user_id, friend_id) values($1, friend_id);
+  	insert into friendships(user_id, friend_id,created_at,updated_at) values($1, friend_id, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
   	is_friend_user := 1;
   else
   	is_friend_user := 0;

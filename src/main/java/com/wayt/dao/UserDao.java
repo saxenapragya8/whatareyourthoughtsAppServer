@@ -19,11 +19,8 @@ public class UserDao {
 	private static UserDao instance;
 	String IS_USER_QUERY = "select id, encrypted_password from users where email=?";
 	String GET_ALL_RECIPIENT_IDS_QUERY = "select id from users where email = any(?)";
-//	String CREATE_USER_QUERY = "{call create_user(?,?,?,?,?)}";
-//	private String GET_EMAIL_FOR_USER = "select email from users where id=?";
-//	private String SOME_USER_ADD_SPOUSE_PENDING_CHECK_QUERY = "select 1 from bt_couples where spouse_id = ? or user_id = ?";
-//	private String GET_USR_ID_FOR_EMAIL = "select id from users where email=?";
-//	private String GET_USR_NAME_FOR_ID = "select name from users where id = ?";
+	String ADD_CHECK_USER_QUERY = "{call add_user(?,?,?,?, ?)}";
+
 	private Connection conn;
 	
 	
@@ -78,5 +75,25 @@ public class UserDao {
 			return null;
 		} 
 		return new ArrayList<Integer>(userIds);
+	}
+	
+	public UserAuthResponse addUserIfNotPresent(String userName, String email, String userId) throws SQLException{
+		CallableStatement stmt = conn.prepareCall(ADD_CHECK_USER_QUERY);
+		try {
+			stmt.setString(1, userName);
+			stmt.setString(2, email);
+			stmt.setString(3, email);
+			stmt.registerOutParameter(4, Types.BOOLEAN);
+			stmt.registerOutParameter(5, Types.INTEGER);
+			stmt.execute();
+			
+			Integer waytUserId = stmt.getInt(5);
+			boolean status = stmt.getBoolean(4);
+			
+			return new UserAuthResponse(waytUserId, status);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} 
 	}
 }
